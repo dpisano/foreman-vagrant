@@ -3,7 +3,7 @@
 # Run on VM to bootstrap the Puppet Agent RHEL-based Linux nodes
 # Gary A. Stafford - 01/15/2015
 # Modified - 08/19/2015
-# Downgrade Puppet on box from 4.x to 3.x for Foreman 1.9 
+# Downgrade Puppet on box from 4.x to 3.x for Foreman 1.9
 # http://theforeman.org/manuals/1.9/index.html#3.1.2PuppetCompatibility
 
 # Update system first
@@ -14,12 +14,9 @@ then
     echo "Puppet Agent $(puppet agent --version) is already installed. Moving on..."
 else
     echo "Puppet Agent $(puppet agent --version) installed. Replacing..."
-    
-    sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm && \
-    sudo yum -y erase puppet-agent && \
-    sudo rm -f /etc/yum.repos.d/puppetlabs-pc1.repo && \
-    sudo yum clean all && \
-    sudo yum -y install puppet nano nmap-ncat
+
+    sudo yum -y install https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
+    sudo yum -y install puppet-agent nano nmap-ncat
 
     # Add agent section to /etc/puppet/puppet.conf
     # Easier to set run interval to 120s for testing (reset to 30m for normal use)

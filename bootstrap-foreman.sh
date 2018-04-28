@@ -3,7 +3,7 @@
 # Run on VM to bootstrap the Foreman server
 # Gary A. Stafford - 01/15/2015
 # Modified - 08/19/2015
-# Downgrade Puppet on box from 4.x to 3.x for Foreman 1.9 
+# Downgrade Puppet on box from 4.x to 3.x for Foreman 1.9
 # http://theforeman.org/manuals/1.9/index.html#3.1.2PuppetCompatibility
 
 # Update system first
@@ -15,17 +15,15 @@ then
 else
     echo "Puppet Agent $(puppet agent --version) installed. Replacing..."
 
-    sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm && \
-    sudo yum -y erase puppet-agent && \
-    sudo rm -f /etc/yum.repos.d/puppetlabs-pc1.repo && \
-    sudo yum clean all
+    sudo yum -y install https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm
 fi
 
 if ps aux | grep "/usr/share/foreman" | grep -v grep 2> /dev/null
 then
     echo "Foreman appears to all already be installed. Exiting..."
 else
-    sudo yum -y install epel-release http://yum.theforeman.org/releases/1.9/el7/x86_64/foreman-release.rpm && \
+    sudo yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo yum -y install https://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm
     sudo yum -y install foreman-installer nano nmap-ncat && \
     sudo foreman-installer
 
@@ -49,12 +47,12 @@ else
     sudo puppet agent --test --waitforcert=60
 
     # Optional, install some optional puppet modules on Foreman server to get started...
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-ntp
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-git
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-vcsrepo
-    sudo puppet module install -i /etc/puppet/environments/production/modules garethr-docker
-    sudo puppet module install -i /etc/puppet/environments/production/modules jfryman-nginx
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-haproxy
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-apache
-    sudo puppet module install -i /etc/puppet/environments/production/modules puppetlabs-java
+    sudo puppet module install puppetlabs-ntp
+    sudo puppet module install puppetlabs-git
+    sudo puppet module install puppetlabs-vcsrepo
+    sudo puppet module install garethr-docker
+    sudo puppet module install jfryman-nginx
+    sudo puppet module install puppetlabs-haproxy
+    sudo puppet module install puppetlabs-apache
+    sudo puppet module install puppetlabs-java
 fi
